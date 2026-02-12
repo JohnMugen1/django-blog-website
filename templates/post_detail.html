@@ -1,0 +1,1141 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/post_detail.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+{% endblock %}
+
+{% block title %}{{ post.title }} - Django Blog{% endblock %}
+
+{% block content %}
+<div class="detail-page-container">
+  <!-- Animated Background -->
+  <div class="detail-background">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+  </div>
+  
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-progress">
+    <div class="progress-bar"></div>
+    <div class="progress-text">0%</div>
+  </div>
+  
+  <!-- Reading Time Indicator -->
+  <div class="reading-time-indicator">
+    <div class="time-circle">
+      <svg viewBox="0 0 36 36" class="circular-chart">
+        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+        <path class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+      </svg>
+      <span class="time-text">0%</span>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+  <div class="detail-container" data-aos="fade-up">
+    <!-- Decorative Corner Elements -->
+    <div class="corner-decoration corner-tl animate__animated animate__fadeIn"></div>
+    <div class="corner-decoration corner-tr animate__animated animate__fadeIn animate__delay-1s"></div>
+    <div class="corner-decoration corner-bl animate__animated animate__fadeIn animate__delay-2s"></div>
+    <div class="corner-decoration corner-br animate__animated animate__fadeIn animate__delay-3s"></div>
+    
+    <!-- Article Header -->
+    <article class="detail-article">
+      <!-- Article Header -->
+      <header class="article-header">
+        <!-- Category Badge -->
+        <div class="article-category" data-aos="fade-right">
+          <span class="category-badge">
+            <i class="fas fa-tag"></i>
+            Blog Post
+          </span>
+          <span class="reading-badge">
+            <i class="far fa-clock"></i>
+            {% with word_count=post.body|wordcount %}
+              {% widthratio word_count 200 1 as read_minutes %}
+              {{ read_minutes|add:"1" }} min read
+            {% endwith %}
+          </span>
+        </div>
+        
+        <!-- Article Title -->
+        <h1 class="article-title animate__animated animate__fadeInUp">
+          <span class="title-line line-1">{{ post.title|truncatewords:5 }}</span>
+          {% if post.title|wordcount > 5 %}
+            <span class="title-line line-2">{{ post.title|truncatewords:10|cut:post.title|truncatewords:5|default:"" }}</span>
+          {% endif %}
+        </h1>
+        
+        <!-- Article Meta -->
+        <div class="article-meta" data-aos="fade-up" data-aos-delay="200">
+          <!-- Author Info -->
+          <div class="author-card">
+            <div class="author-avatar">
+              {% if post.author %}
+                <div class="avatar-initials">{{ post.author.username|slice:"0:2"|upper }}</div>
+              {% else %}
+                <i class="fas fa-user-circle"></i>
+              {% endif %}
+            </div>
+            <div class="author-info">
+              <div class="author-name">
+                {{ post.author.username|default:"Anonymous" }}
+                {% if post.author %}
+                  <span class="verified-badge" title="Verified Author">
+                    <i class="fas fa-check-circle"></i>
+                  </span>
+                {% endif %}
+              </div>
+              <div class="author-details">
+                <span class="publish-date">
+                  <i class="far fa-calendar"></i>
+                  {{ post.created_at|date:"F j, Y" }}
+                </span>
+                <span class="read-time">
+                  <i class="fas fa-history"></i>
+                  {{ post.created_at|timesince }} ago
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Stats -->
+          <div class="article-stats" data-aos="fade-left" data-aos-delay="300">
+            <div class="stat-item">
+              <i class="far fa-eye"></i>
+              <div class="stat-content">
+                <span class="stat-number">{{ post.views|default:"1.2k" }}</span>
+                <span class="stat-label">Views</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <i class="far fa-comment"></i>
+              <div class="stat-content">
+                <span class="stat-number">{{ post.comment_count|default:"24" }}</span>
+                <span class="stat-label">Comments</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <i class="far fa-heart"></i>
+              <div class="stat-content">
+                <span class="stat-number">{{ post.likes|default:"156" }}</span>
+                <span class="stat-label">Likes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Social Share -->
+        <div class="social-share" data-aos="fade-up" data-aos-delay="400">
+          <span class="share-label">Share:</span>
+          <div class="share-buttons">
+            <button class="share-btn twitter" aria-label="Share on Twitter">
+              <i class="fab fa-twitter"></i>
+            </button>
+            <button class="share-btn facebook" aria-label="Share on Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </button>
+            <button class="share-btn linkedin" aria-label="Share on LinkedIn">
+              <i class="fab fa-linkedin-in"></i>
+            </button>
+            <button class="share-btn copy-link" aria-label="Copy link">
+              <i class="fas fa-link"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Featured Image - BEAUTIFUL ANIMATED VERSION -->
+      <div class="featured-image" data-aos="zoom-in" data-aos-delay="500">
+        <div class="gradient-background">
+          <div class="image-content">
+            <div class="floating-elements">
+              <div class="circle circle-1"></div>
+              <div class="circle circle-2"></div>
+              <div class="circle circle-3"></div>
+              <div class="abstract-shape shape-1"></div>
+              <div class="abstract-shape shape-2"></div>
+            </div>
+            <div class="image-text">
+              <h3 class="image-title">Discover Insights</h3>
+              <p class="image-subtitle">Thoughtful perspectives await</p>
+            </div>
+            <div class="sparkle">
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+        </div>
+        <div class="image-caption">
+          <i class="fas fa-camera"></i>
+          <span>Visual representation of the article</span>
+        </div>
+      </div>
+      
+      <!-- Article Content -->
+      <div class="article-content" id="articleContent">
+        <!-- Content Decoration -->
+        <div class="content-decoration">
+          <div class="decoration-line"></div>
+          <div class="decoration-dot"></div>
+        </div>
+        
+        <!-- Post Body -->
+        <div class="post-body" data-aos="fade-up" data-aos-delay="600">
+          <!-- Table of Contents -->
+          <div class="table-of-contents" id="tocContainer">
+            <div class="toc-header">
+              <i class="fas fa-list"></i>
+              <h3>Table of Contents</h3>
+              <button class="toc-toggle" id="tocToggle">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <nav class="toc-content" id="tocContent"></nav>
+          </div>
+          
+          <!-- Main Content -->
+          <div class="content-wrapper">
+            <!-- Introduction -->
+            <section class="content-section intro-section">
+              <div class="section-icon">
+                <i class="fas fa-star"></i>
+              </div>
+              <p class="lead-text">
+                {{ post.body|truncatewords:50 }}
+              </p>
+            </section>
+            
+            <!-- Full Content -->
+            <section class="content-section main-content">
+              <div class="content-paragraphs">
+                {{ post.body|linebreaks }}
+              </div>
+              
+              <!-- Code Block Example (if any code in content) -->
+              {% if "```" in post.body %}
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="code-language">Python</span>
+                  <button class="copy-code" aria-label="Copy code">
+                    <i class="far fa-copy"></i>
+                  </button>
+                </div>
+                <pre><code class="language-python"># Example code block
+def hello_world():
+    print("Hello, Django Blog!")
+    return "Success"</code></pre>
+              </div>
+              {% endif %}
+              
+              <!-- Quote Block -->
+              <blockquote class="content-quote">
+                <i class="fas fa-quote-left quote-icon"></i>
+                <p>The most important part of any article is the value it provides to the reader.</p>
+                <cite class="quote-author">– John Mugendi Wisdom</cite>
+              </blockquote>
+            </section>
+          </div>
+        </div>
+        
+        <!-- Content Stats -->
+        <div class="content-stats" data-aos="fade-up" data-aos-delay="700">
+          <div class="stat-card">
+            <i class="fas fa-font"></i>
+            <div class="stat-info">
+              <span class="stat-value">
+                {% with word_count=post.body|wordcount %}
+                  {{ word_count|intcomma }}
+                {% endwith %}
+              </span>
+              <span class="stat-label">Words</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-paragraph"></i>
+            <div class="stat-info">
+              <span class="stat-value">{{ post.body|length|intcomma }}</span>
+              <span class="stat-label">Characters</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="far fa-clock"></i>
+            <div class="stat-info">
+              <span class="stat-value">
+                {% with word_count=post.body|wordcount %}
+                  {% widthratio word_count 200 1 as minutes %}
+                  {{ minutes|add:"1" }}
+                {% endwith %}
+              </span>
+              <span class="stat-label">Min Read</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-chart-line"></i>
+            <div class="stat-info">
+              <span class="stat-value">94%</span>
+              <span class="stat-label">Readability</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tags -->
+        <div class="article-tags" data-aos="fade-up" data-aos-delay="800">
+          <div class="tags-header">
+            <i class="fas fa-hashtag"></i>
+            <h4>Topics Covered</h4>
+          </div>
+          <div class="tags-container">
+            <a href="#" class="tag">Django</a>
+            <a href="#" class="tag">Web Development</a>
+            <a href="#" class="tag">Python</a>
+            <a href="#" class="tag">Blogging</a>
+            <a href="#" class="tag">Programming</a>
+            <a href="#" class="tag">Tutorial</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Article Footer -->
+      <footer class="article-footer">
+        <!-- Author Bio -->
+        <div class="author-bio" data-aos="fade-up" data-aos-delay="900">
+          <div class="bio-header">
+            <h3>About the Author</h3>
+            <div class="author-actions">
+              <button class="follow-btn">
+                <i class="fas fa-user-plus"></i>
+                Follow
+              </button>
+            </div>
+          </div>
+          <div class="bio-content">
+            <div class="bio-avatar">
+              {% if post.author %}
+                <div class="avatar-large">{{ post.author.username|slice:"0:1"|upper }}</div>
+              {% else %}
+                <i class="fas fa-user-circle"></i>
+              {% endif %}
+            </div>
+            <div class="bio-details">
+              <h4>{{ post.author.username|default:"Anonymous Author" }}</h4>
+              <p class="bio-text">
+                {% if post.author %}
+                  Passionate developer and writer sharing insights about Django, Python, and web development.
+                {% else %}
+                  Our team of dedicated writers and developers creating valuable content for the community.
+                {% endif %}
+              </p>
+              <div class="bio-stats">
+                <span class="bio-stat">
+                  <i class="fas fa-pen-nib"></i>
+                  {{ post.author_posts_count|default:"24" }} posts
+                </span>
+                <span class="bio-stat">
+                  <i class="fas fa-users"></i>
+                  {{ post.author_followers|default:"1.5k" }} followers
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Related Posts -->
+        <div class="related-posts" data-aos="fade-up" data-aos-delay="1000">
+          <div class="related-header">
+            <h3>Related Articles</h3>
+            <a href="{% url 'home' %}" class="view-all">
+              View All
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+          <div class="related-grid">
+            <article class="related-card">
+              <div class="related-category">Tutorial</div>
+              <h4 class="related-title">Getting Started with Django</h4>
+              <p class="related-excerpt">Learn the basics of Django framework and build your first web application.</p>
+              <div class="related-meta">
+                <span class="related-date">May 15, 2023</span>
+                <span class="related-read">5 min read</span>
+              </div>
+            </article>
+            <article class="related-card">
+              <div class="related-category">Guide</div>
+              <h4 class="related-title">Django Best Practices</h4>
+              <p class="related-excerpt">Discover essential practices for building scalable Django applications.</p>
+              <div class="related-meta">
+                <span class="related-date">April 22, 2023</span>
+                <span class="related-read">8 min read</span>
+              </div>
+            </article>
+            <article class="related-card">
+              <div class="related-category">Tips</div>
+              <h4 class="related-title">Optimizing Django Performance</h4>
+              <p class="related-excerpt">Tips and tricks to make your Django applications run faster and smoother.</p>
+              <div class="related-meta">
+                <span class="related-date">March 10, 2023</span>
+                <span class="related-read">6 min read</span>
+              </div>
+            </article>
+          </div>
+        </div>
+        
+        <!-- Comments Section -->
+        <div class="comments-section" data-aos="fade-up" data-aos-delay="1100">
+          <div class="comments-header">
+            <h3>Comments (24)</h3>
+            <button class="add-comment">
+              <i class="fas fa-plus"></i>
+              Add Comment
+            </button>
+          </div>
+          <div class="comments-container">
+            <!-- Comment Form -->
+            <form class="comment-form">
+              <div class="form-header">
+                <div class="comment-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <h4>Join the Discussion</h4>
+              </div>
+              <textarea class="comment-input" placeholder="Share your thoughts..."></textarea>
+              <div class="form-actions">
+                <button type="submit" class="submit-comment">
+                  <i class="fas fa-paper-plane"></i>
+                  Post Comment
+                </button>
+              </div>
+            </form>
+            
+            <!-- Comments List -->
+            <div class="comments-list">
+              <!-- Sample Comment -->
+              <div class="comment">
+                <div class="comment-avatar">
+                  <div class="avatar-small">JD</div>
+                </div>
+                <div class="comment-content">
+                  <div class="comment-header">
+                    <span class="comment-author">Miriam Nyawira</span>
+                    <span class="comment-date">2 days ago</span>
+                    <button class="comment-like">
+                      <i class="far fa-heart"></i>
+                      <span>42</span>
+                    </button>
+                  </div>
+                  <p class="comment-text">Great article! The explanation about Django models was very clear and helpful.</p>
+                  <div class="comment-actions">
+                    <button class="reply-btn">Reply</button>
+                    <button class="share-btn">Share</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </article>
+    
+    <!-- Action Sidebar -->
+    <aside class="action-sidebar" data-aos="fade-left" data-aos-delay="1200">
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <!-- Back to Posts -->
+        <a href="{% url 'home' %}" class="action-btn back-btn">
+          <span class="btn-icon">
+            <i class="fas fa-arrow-left"></i>
+          </span>
+          <span class="btn-text">
+            <span class="btn-main">Back to Posts</span>
+            <span class="btn-sub">Browse all articles</span>
+          </span>
+        </a>
+        
+        <!-- Edit Post -->
+        <a href="{% url 'post_edit' post.id %}" class="action-btn edit-btn">
+          <span class="btn-icon">
+            <i class="fas fa-edit"></i>
+          </span>
+          <span class="btn-text">
+            <span class="btn-main">Edit Post</span>
+            <span class="btn-sub">Update content</span>
+          </span>
+        </a>
+        
+        <!-- Delete Post -->
+        <a href="{% url 'delete_post' post.id %}" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this post?');">
+          <span class="btn-icon">
+            <i class="fas fa-trash-alt"></i>
+          </span>
+          <span class="btn-text">
+            <span class="btn-main">Delete Post</span>
+            <span class="btn-sub">Remove permanently</span>
+          </span>
+        </a>
+        
+        <!-- Print Article -->
+        <button class="action-btn print-btn" onclick="window.print()">
+          <span class="btn-icon">
+            <i class="fas fa-print"></i>
+          </span>
+          <span class="btn-text">
+            <span class="btn-main">Print</span>
+            <span class="btn-sub">Save as PDF</span>
+          </span>
+        </button>
+        
+        <!-- Save for Later -->
+        <button class="action-btn save-btn">
+          <span class="btn-icon">
+            <i class="far fa-bookmark"></i>
+          </span>
+          <span class="btn-text">
+            <span class="btn-main">Save</span>
+            <span class="btn-sub">Read later</span>
+          </span>
+        </button>
+      </div>
+      
+      <!-- Table of Contents Sidebar -->
+      <nav class="sidebar-toc" id="sidebarToc">
+        <h4 class="toc-title">
+          <i class="fas fa-list-ol"></i>
+          Contents
+        </h4>
+        <ul class="toc-list" id="sidebarTocList"></ul>
+      </nav>
+      
+      <!-- Share Sidebar -->
+      <div class="share-sidebar">
+        <h4 class="share-title">
+          <i class="fas fa-share-alt"></i>
+          Share
+        </h4>
+        <div class="share-links">
+          <button class="share-link twitter">
+            <i class="fab fa-twitter"></i>
+            Twitter
+          </button>
+          <button class="share-link facebook">
+            <i class="fab fa-facebook-f"></i>
+            Facebook
+          </button>
+          <button class="share-link linkedin">
+            <i class="fab fa-linkedin-in"></i>
+            LinkedIn
+          </button>
+          <button class="share-link copy">
+            <i class="fas fa-link"></i>
+            Copy Link
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+  
+  <!-- Floating Action Buttons -->
+  <div class="floating-actions">
+    <button class="fab scroll-top" id="scrollTopBtn">
+      <i class="fas fa-chevron-up"></i>
+    </button>
+    <button class="fab theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i>
+    </button>
+    <button class="fab font-size" id="fontSizeToggle">
+      <i class="fas fa-text-height"></i>
+    </button>
+  </div>
+  
+  <!-- Notification Toast -->
+  <div class="notification-toast" id="notificationToast">
+    <div class="toast-content">
+      <i class="fas fa-check-circle"></i>
+      <span class="toast-message">Link copied to clipboard!</span>
+    </div>
+  </div>
+</div>
+
+<!-- AOS Library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<!-- Highlight.js for code syntax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+<!-- Custom JavaScript -->
+<script src="{% static 'js/post_detail.js' %}"></script>
+
+<script>
+  // Initialize AOS
+  AOS.init({
+    duration: 800,
+    once: false,
+    offset: 100,
+    delay: 100,
+    easing: 'ease-in-out-cubic'
+  });
+  
+  // Initialize Highlight.js
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll('pre code').forEach((el) => {
+      hljs.highlightElement(el);
+    });
+  });
+  
+  // Generate Table of Contents
+  function generateTOC() {
+    const articleContent = document.querySelector('.article-content');
+    const headings = articleContent.querySelectorAll('h2, h3');
+    const tocContainer = document.getElementById('tocContent');
+    const sidebarTocList = document.getElementById('sidebarTocList');
+    
+    if (headings.length > 0) {
+      let tocHTML = '<ul class="toc-list-main">';
+      let sidebarTocHTML = '';
+      
+      headings.forEach((heading, index) => {
+        // Create ID if not exists
+        if (!heading.id) {
+          heading.id = 'section-' + index;
+        }
+        
+        const level = heading.tagName.toLowerCase();
+        const text = heading.textContent;
+        
+        if (level === 'h2') {
+          tocHTML += `
+            <li class="toc-item-h2">
+              <a href="#${heading.id}" class="toc-link">
+                <i class="fas fa-chevron-right"></i>
+                ${text}
+              </a>
+          `;
+          
+          sidebarTocHTML += `
+            <li class="sidebar-toc-item">
+              <a href="#${heading.id}" class="sidebar-toc-link">
+                ${text}
+              </a>
+            </li>
+          `;
+        } else if (level === 'h3') {
+          tocHTML += `
+            <ul class="toc-sublist">
+              <li class="toc-item-h3">
+                <a href="#${heading.id}" class="toc-link">
+                  <i class="fas fa-circle"></i>
+                  ${text}
+                </a>
+              </li>
+            </ul>
+          `;
+        }
+        
+        if (level === 'h2') {
+          tocHTML += '</li>';
+        }
+      });
+      
+      tocHTML += '</ul>';
+      
+      if (tocContainer) {
+        tocContainer.innerHTML = tocHTML;
+      }
+      
+      if (sidebarTocList) {
+        sidebarTocList.innerHTML = sidebarTocHTML;
+      }
+      
+      // Smooth scroll for TOC links
+      document.querySelectorAll('.toc-link, .sidebar-toc-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          const targetElement = document.querySelector(targetId);
+          
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 100,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    } else {
+      if (tocContainer) {
+        tocContainer.innerHTML = '<p class="toc-empty">No sections found</p>';
+      }
+      if (sidebarTocList) {
+        sidebarTocList.innerHTML = '<p class="toc-empty">No sections</p>';
+      }
+    }
+  }
+  
+  // Call TOC generation
+  document.addEventListener('DOMContentLoaded', generateTOC);
+  
+  // Toggle Table of Contents
+  const tocToggle = document.getElementById('tocToggle');
+  const tocContent = document.getElementById('tocContent');
+  
+  if (tocToggle && tocContent) {
+    tocToggle.addEventListener('click', () => {
+      tocContent.classList.toggle('collapsed');
+      tocToggle.querySelector('i').classList.toggle('fa-chevron-up');
+      tocToggle.querySelector('i').classList.toggle('fa-chevron-down');
+    });
+  }
+
+  // ===========================================
+  // THEME TOGGLE FUNCTIONALITY
+  // ===========================================
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = themeToggle.querySelector('i');
+  
+  // Check for saved theme or prefer-color-scheme
+  const getPreferredTheme = () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
+  
+  // Set theme
+  const setTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    
+    // Update icon
+    if (theme === 'dark') {
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+      themeToggle.setAttribute('title', 'Switch to light mode');
+    } else {
+      themeIcon.classList.remove('fa-sun');
+      themeIcon.classList.add('fa-moon');
+      themeToggle.setAttribute('title', 'Switch to dark mode');
+    }
+  };
+  
+  // Initialize theme
+  const currentTheme = getPreferredTheme();
+  setTheme(currentTheme);
+  
+  // Toggle theme on button click
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    
+    // Add animation feedback
+    themeToggle.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+      themeToggle.style.transform = 'scale(1)';
+    }, 200);
+  });
+  
+  // Listen for system theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      setTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+  
+  // ===========================================
+  // FONT SIZE TOGGLE FUNCTIONALITY
+  // ===========================================
+  const fontSizeToggle = document.getElementById('fontSizeToggle');
+  const fontSizeIcon = fontSizeToggle.querySelector('i');
+  
+  // Font size levels
+  const fontSizeLevels = {
+    small: {
+      size: '0.9rem',
+      icon: 'fa-text-height',
+      label: 'Small text',
+      next: 'medium'
+    },
+    medium: {
+      size: '1rem',
+      icon: 'fa-text-height',
+      label: 'Medium text',
+      next: 'large'
+    },
+    large: {
+      size: '1.1rem',
+      icon: 'fa-text-height',
+      label: 'Large text',
+      next: 'xlarge'
+    },
+    xlarge: {
+      size: '1.2rem',
+      icon: 'fa-text-height',
+      label: 'Extra large text',
+      next: 'small'
+    }
+  };
+  
+  // Get current font size
+  const getCurrentFontSize = () => {
+    const savedSize = localStorage.getItem('fontSize');
+    return savedSize || 'medium';
+  };
+  
+  // Set font size
+  const setFontSize = (sizeLevel) => {
+    const sizeConfig = fontSizeLevels[sizeLevel];
+    
+    // Apply to all text elements
+    const textElements = document.querySelectorAll('body, p, span, div, h1, h2, h3, h4, h5, h6, li, td, th, input, textarea, button, a');
+    
+    textElements.forEach(el => {
+      // Don't affect buttons with fixed sizes or icons
+      if (!el.closest('.fab') && !el.closest('.share-btn') && !el.closest('.action-btn')) {
+        const currentSize = window.getComputedStyle(el).fontSize;
+        const baseSize = parseFloat(sizeConfig.size);
+        
+        // Scale headings proportionally
+        if (el.tagName.match(/^H[1-6]$/)) {
+          const tagName = el.tagName.toLowerCase();
+          const headingMultipliers = {
+            'h1': 2.5,
+            'h2': 2.0,
+            'h3': 1.75,
+            'h4': 1.5,
+            'h5': 1.25,
+            'h6': 1.1
+          };
+          el.style.fontSize = `${baseSize * headingMultipliers[tagName]}rem`;
+        } else if (el.classList.contains('article-title')) {
+          el.style.fontSize = ''; // Let CSS handle it
+        } else {
+          el.style.fontSize = sizeConfig.size;
+        }
+      }
+    });
+    
+    // Save preference
+    localStorage.setItem('fontSize', sizeLevel);
+    
+    // Update button title
+    fontSizeToggle.setAttribute('title', sizeConfig.label);
+    
+    // Add animation feedback
+    fontSizeToggle.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+      fontSizeToggle.style.transform = 'scale(1)';
+    }, 200);
+  };
+  
+  // Toggle font size
+  fontSizeToggle.addEventListener('click', () => {
+    const currentSize = getCurrentFontSize();
+    const nextSize = fontSizeLevels[currentSize].next;
+    setFontSize(nextSize);
+  });
+  
+  // Initialize font size
+  const initialFontSize = getCurrentFontSize();
+  setFontSize(initialFontSize);
+  
+  // ===========================================
+  // SCROLL TO TOP FUNCTIONALITY
+  // ===========================================
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  
+  // Show/hide scroll to top button
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      scrollTopBtn.style.opacity = '1';
+      scrollTopBtn.style.visibility = 'visible';
+    } else {
+      scrollTopBtn.style.opacity = '0';
+      scrollTopBtn.style.visibility = 'hidden';
+    }
+  });
+  
+  // Scroll to top
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    
+    // Add animation feedback
+    scrollTopBtn.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+      scrollTopBtn.style.transform = 'scale(1)';
+    }, 200);
+  });
+  
+  // ===========================================
+  // NOTIFICATION TOAST FUNCTIONALITY
+  // ===========================================
+  const notificationToast = document.getElementById('notificationToast');
+  
+  function showToast(message, type = 'success') {
+    const toastMessage = notificationToast.querySelector('.toast-message');
+    const toastIcon = notificationToast.querySelector('i');
+    
+    // Set message and icon
+    toastMessage.textContent = message;
+    
+    // Set icon based on type
+    if (type === 'success') {
+      toastIcon.className = 'fas fa-check-circle';
+      notificationToast.style.background = 'var(--detail-gradient-primary)';
+    } else if (type === 'error') {
+      toastIcon.className = 'fas fa-exclamation-circle';
+      notificationToast.style.background = 'var(--detail-gradient-secondary)';
+    } else if (type === 'info') {
+      toastIcon.className = 'fas fa-info-circle';
+      notificationToast.style.background = 'var(--detail-gradient-accent)';
+    }
+    
+    // Show toast
+    notificationToast.classList.add('show');
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+      notificationToast.classList.remove('show');
+    }, 3000);
+  }
+  
+  // ===========================================
+  // COPY LINK FUNCTIONALITY
+  // ===========================================
+  const copyButtons = document.querySelectorAll('.share-btn.copy-link, .share-link.copy');
+  
+  copyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const currentUrl = window.location.href;
+      
+      // Use Clipboard API if available
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(currentUrl)
+          .then(() => {
+            showToast('Link copied to clipboard!', 'success');
+          })
+          .catch(err => {
+            console.error('Failed to copy:', err);
+            showToast('Failed to copy link', 'error');
+          });
+      } else {
+        // Fallback method
+        const textArea = document.createElement('textarea');
+        textArea.value = currentUrl;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+          document.execCommand('copy');
+          showToast('Link copied to clipboard!', 'success');
+        } catch (err) {
+          console.error('Fallback copy failed:', err);
+          showToast('Failed to copy link', 'error');
+        }
+        
+        document.body.removeChild(textArea);
+      }
+      
+      // Add animation feedback
+      button.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        button.style.transform = 'scale(1)';
+      }, 200);
+    });
+  });
+  
+  // ===========================================
+  // SOCIAL SHARE FUNCTIONALITY
+  // ===========================================
+  const socialShareButtons = document.querySelectorAll('.share-btn.twitter, .share-btn.facebook, .share-btn.linkedin, .share-link.twitter, .share-link.facebook, .share-link.linkedin');
+  
+  socialShareButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const currentUrl = encodeURIComponent(window.location.href);
+      const currentTitle = encodeURIComponent(document.title);
+      
+      let shareUrl = '';
+      
+      if (button.classList.contains('twitter')) {
+        shareUrl = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${currentTitle}`;
+      } else if (button.classList.contains('facebook')) {
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+      } else if (button.classList.contains('linkedin')) {
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`;
+      }
+      
+      if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+        
+        // Add animation feedback
+        button.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          button.style.transform = 'scale(1)';
+        }, 200);
+      }
+    });
+  });
+  
+  // ===========================================
+  // SAVE FOR LATER FUNCTIONALITY
+  // ===========================================
+  const saveButton = document.querySelector('.save-btn');
+  const saveIcon = saveButton?.querySelector('i');
+  
+  if (saveButton) {
+    // Check if post is saved
+    const isSaved = localStorage.getItem(`saved-post-${window.location.pathname}`);
+    
+    // Initialize save state
+    if (isSaved === 'true') {
+      saveIcon?.classList.remove('far', 'fa-bookmark');
+      saveIcon?.classList.add('fas', 'fa-bookmark');
+      saveButton.querySelector('.btn-main').textContent = 'Saved';
+    }
+    
+    saveButton.addEventListener('click', () => {
+      const postId = window.location.pathname;
+      const isCurrentlySaved = localStorage.getItem(`saved-post-${postId}`) === 'true';
+      
+      if (isCurrentlySaved) {
+        // Remove from saved
+        localStorage.setItem(`saved-post-${postId}`, 'false');
+        saveIcon?.classList.remove('fas', 'fa-bookmark');
+        saveIcon?.classList.add('far', 'fa-bookmark');
+        saveButton.querySelector('.btn-main').textContent = 'Save';
+        showToast('Removed from saved articles', 'info');
+      } else {
+        // Add to saved
+        localStorage.setItem(`saved-post-${postId}`, 'true');
+        saveIcon?.classList.remove('far', 'fa-bookmark');
+        saveIcon?.classList.add('fas', 'fa-bookmark');
+        saveButton.querySelector('.btn-main').textContent = 'Saved';
+        showToast('Article saved for later!', 'success');
+      }
+      
+      // Add animation feedback
+      saveButton.style.transform = 'scale(1.05)';
+      setTimeout(() => {
+        saveButton.style.transform = 'scale(1)';
+      }, 200);
+    });
+  }
+  
+  // ===========================================
+  // READING PROGRESS INDICATOR
+  // ===========================================
+  const progressBar = document.querySelector('.progress-bar');
+  const progressText = document.querySelector('.progress-text');
+  
+  function updateProgress() {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+    const roundedPercent = Math.round(scrollPercent);
+    
+    if (progressBar) {
+      progressBar.style.width = `${scrollPercent}%`;
+    }
+    
+    if (progressText) {
+      progressText.textContent = `${roundedPercent}%`;
+    }
+  }
+  
+  window.addEventListener('scroll', updateProgress);
+  window.addEventListener('resize', updateProgress);
+  
+  // ===========================================
+  // READING TIME TRACKER
+  // ===========================================
+  const readingIndicator = document.querySelector('.reading-time-indicator');
+  const timeCircle = document.querySelector('.time-circle .circle');
+  const timeText = document.querySelector('.time-text');
+  
+  if (readingIndicator && timeCircle) {
+    let readingTime = 0;
+    let isReading = false;
+    let lastScrollTop = 0;
+    let scrollDirection = 'down';
+    
+    function updateReadingProgress() {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Determine scroll direction
+      if (scrollTop > lastScrollTop) {
+        scrollDirection = 'down';
+      } else if (scrollTop < lastScrollTop) {
+        scrollDirection = 'up';
+      }
+      lastScrollTop = scrollTop;
+      
+      // Calculate reading progress
+      const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+      const roundedPercent = Math.min(Math.round(scrollPercent), 100);
+      
+      // Update circle progress
+      timeCircle.style.strokeDasharray = `${roundedPercent}, 100`;
+      
+      // Update text
+      if (timeText) {
+        timeText.textContent = `${roundedPercent}%`;
+      }
+      
+      // Show/hide indicator based on scroll
+      if (scrollPercent > 10 && scrollDirection === 'down') {
+        readingIndicator.classList.add('visible');
+        isReading = true;
+      } else if (scrollPercent > 90 || scrollDirection === 'up') {
+        readingIndicator.classList.remove('visible');
+        isReading = false;
+      }
+      
+      // Track reading time
+      if (isReading && scrollDirection === 'down') {
+        readingTime += 0.1; // Increment every 100ms
+      }
+    }
+    
+    // Update reading progress on scroll
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      if (!scrollTimeout) {
+        scrollTimeout = setTimeout(() => {
+          updateReadingProgress();
+          scrollTimeout = null;
+        }, 100);
+      }
+    });
+    
+    // Update on load
+    updateReadingProgress();
+    
+    // Make time circle clickable to scroll to top
+    timeCircle.closest('.time-circle')?.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+</script>
+{% endblock content %}

@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<script src="{% static 'js/signup.js' %}" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="signup-page">
+    <!-- Left decorative panel -->
+    <div class="decorative-panel">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h2 class="logo-text">Welcome to <span>BlogsKenya</span></h2>
+        </div>
+        
+        <div class="feature-list">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="feature-content">
+                    <h4>Secure & Safe</h4>
+                    <p>Bank-level encryption for your data</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="feature-content">
+                    <h4>Lightning Fast</h4>
+                    <p>Optimized for speed and performance</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="feature-content">
+                    <h4>Join Community</h4>
+                    <p>Connect with millions of users</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="decorative-quote">
+            <div class="quote-icon">
+                <i class="fas fa-quote-left"></i>
+            </div>
+            <p class="quote-text">"The best way to get started is to begin."</p>
+            <p class="quote-author">- Start Today</p>
+        </div>
+    </div>
+    
+    <!-- Right signup panel -->
+    <div class="signup-panel">
+        <div class="signup-header">
+            <div class="back-button">
+                <a href="{% url 'home' %}" class="back-link">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </a>
+            </div>
+            
+            <h1 class="signup-title">Create Account</h1>
+            <p class="signup-subtitle">Start your journey with us</p>
+            
+            <div class="progress-indicator">
+                <div class="progress-step active">
+                    <span class="step-number">1</span>
+                    <span class="step-label">Details</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step">
+                    <span class="step-number">2</span>
+                    <span class="step-label">Verify</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step">
+                    <span class="step-number">3</span>
+                    <span class="step-label">Complete</span>
+                </div>
+            </div>
+        </div>
+        
+        <form method="post" class="signup-form" id="signupForm" action="{% url 'signup' %}">
+            {% csrf_token %}
+            
+            <div class="form-grid">
+                {% for field in form %}
+                <div class="form-field {% if field.errors %}has-error{% endif %}">
+                    <div class="field-header">
+                        <label for="{{ field.id_for_label }}" class="field-label">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                            <span class="required-mark">*</span>
+                            {% endif %}
+                        </label>
+                        {% if field.help_text %}
+                        <span class="field-help" title="{{ field.help_text }}">
+                            <i class="fas fa-question-circle"></i>
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        {{ field }}
+                        <div class="input-decoration">
+                            <span class="input-border"></span>
+                            <span class="input-focus-border"></span>
+                        </div>
+                        {% if field.name == 'email' %}
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        {% elif field.name == 'password' %}
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        {% elif field.name == 'username' %}
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if field.errors %}
+                    <div class="field-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{ field.errors.0 }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if field.name == 'password' %}
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-segment" data-level="1"></div>
+                            <div class="strength-segment" data-level="2"></div>
+                            <div class="strength-segment" data-level="3"></div>
+                            <div class="strength-segment" data-level="4"></div>
+                        </div>
+                        <div class="strength-text">Password strength: <span>None</span></div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Terms and conditions -->
+            <div class="terms-agreement">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <span class="checkmark">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="checkbox-text">
+                        I agree to the <a href="#" class="terms-link">Terms of Service</a> and 
+                        <a href="#" class="terms-link">Privacy Policy</a>
+                    </span>
+                </label>
+                <div class="terms-error" id="termsError"></div>
+            </div>
+            
+            <!-- Action buttons -->
+            <div class="form-actions">
+                <button type="submit" class="submit-button" id="submitButton">
+                    <span class="button-text">Create Account</span>
+                    <span class="button-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </span>
+                    <span class="button-success">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </button>
+                
+                <div class="alternative-login">
+                    <div class="divider">
+                        <span>Or continue with</span>
+                    </div>
+                    
+                    <div class="social-buttons">
+                        <button type="button" class="social-button google">
+                            <i class="fab fa-google"></i>
+                            <span>Google</span>
+                        </button>
+                        <button type="button" class="social-button github">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </button>
+                        <button type="button" class="social-button twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sign in link -->
+            <div class="signin-redirect">
+                <p>Already have an account? 
+                    <a href="{% url 'login' %}" class="signin-link" id="signinLink">
+                        <span>Sign In</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </p>
+            </div>
+        </form>
+        
+        <!-- Success overlay -->
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-content">
+                <div class="success-icon">
+                    <div class="icon-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="icon-ring"></div>
+                </div>
+                <h2 class="success-title">Account Created!</h2>
+                <p class="success-message">Welcome to Blog Center! Your account has been successfully created.</p>
+                <div class="success-actions">
+                    <a href="{% url 'home' %}" class="action-button primary">
+                        <span>Go to Dashboard</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="{% url 'home' %}" class="action-button secondary">
+                        <span>Back to Home</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Background animation elements -->
+<div class="background-animation">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+</div>
+
+<!-- Include JavaScript -->
+
+
+<!-- Fallback script for immediate functionality -->
+<script>
+// Immediate fallback to ensure buttons work
+(function() {
+    'use strict';
+    
+    // Run when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Fallback script loaded');
+        
+        // Simple button functionality
+        const submitButton = document.getElementById('submitButton');
+        const signinLink = document.getElementById('signinLink');
+        
+        if (submitButton) {
+            submitButton.addEventListener('click', function(e) {
+                console.log('Submit button clicked (fallback)');
+                // Form will submit normally
+            });
+        }
+        
+        if (signinLink) {
+            signinLink.addEventListener('click', function(e) {
+                console.log('Sign in link clicked (fallback)');
+                // Link will navigate normally
+            });
+        }
+    });
+})();
+</script>
+{% endblock %}

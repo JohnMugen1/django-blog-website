@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blog Posts - Django Blog{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+
+<div class="posts-page-container">
+  <!-- Animated Background Particles -->
+  <div class="particles-container">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+  </div>
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="header-content" data-aos="fade-up" data-aos-delay="100">
+      <!-- Decorative corner elements -->
+      <div class="corner-decor corner-tl"></div>
+      <div class="corner-decor corner-tr"></div>
+      <div class="corner-decor corner-bl"></div>
+      <div class="corner-decor corner-br"></div>
+      
+      <!-- Animated title -->
+      <h1 class="page-title">
+        <span class="title-line title-line-1">Blog</span>
+        <span class="title-line title-line-2">Posts</span>
+      </h1>
+      
+      <!-- Animated subtitle with typing effect -->
+      <div class="subtitle-container">
+        <p class="page-subtitle">
+          <span class="typed-text">Discover our latest articles and insights</span>
+          <span class="cursor">&nbsp;</span>
+        </p>
+      </div>
+      
+      <!-- Decorative separator -->
+      <div class="title-separator">
+        <div class="separator-line"></div>
+        <div class="separator-dot"></div>
+        <div class="separator-line"></div>
+      </div>
+      
+      <!-- Create new post button -->
+      <div class="btn-container" data-aos="zoom-in" data-aos-delay="300">
+        <a href="{% url 'post_new' %}" class="create-post-btn">
+          <span class="btn-icon-container">
+            <i class="fas fa-plus btn-icon"></i>
+          </span>
+          <span class="btn-text">
+            <span class="btn-text-main">Create New Post</span>
+            <span class="btn-text-sub">Share your thoughts</span>
+          </span>
+          <span class="btn-arrow">
+            <i class="fas fa-arrow-right"></i>
+          </span>
+          <span class="btn-shine"></span>
+        </a>
+      </div>
+      
+      <!-- Stats counter -->
+      <div class="stats-container" data-aos="fade-up" data-aos-delay="400">
+        <div class="stat-item">
+          <div class="stat-number">{{ object_list|length }}</div>
+          <div class="stat-label">Total Posts</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">
+            {% with total_words=0 %}
+              {% for post in object_list %}
+                {% with post.body|wordcount as post_words %}
+                  {{ post_words|add:total_words }}
+                {% endwith %}
+              {% endfor %}
+            {% endwith %}
+          </div>
+          <div class="stat-label">Words Written</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ object_list|length|default:"0" }}</div>
+          <div class="stat-label">Active Authors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts grid -->
+  <div class="posts-grid-section">
+    <!-- Section title -->
+    <div class="section-header" data-aos="fade-up">
+      <h2 class="section-title">
+        <i class="fas fa-newspaper title-icon"></i>
+        Latest Articles
+      </h2>
+      <p class="section-subtitle">Browse through our collection of insightful posts</p>
+    </div>
+    
+    <!-- Filter buttons -->
+    <div class="filter-container" data-aos="fade-up" data-aos-delay="100">
+      <button class="filter-btn active" data-filter="all">All Posts</button>
+      <button class="filter-btn" data-filter="recent">Recent</button>
+      <button class="filter-btn" data-filter="popular">Popular</button>
+      <button class="filter-btn" data-filter="featured">Featured</button>
+    </div>
+    
+    <!-- Posts container -->
+    <div class="posts-container-wrapper">
+      <div class="posts-container">
+        {% for post in object_list %}
+          <div class="post-card" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter 1 100 %}">
+            <!-- Card gradient border -->
+            <div class="card-gradient-border"></div>
+            
+            <!-- Card header -->
+            <div class="card-header">
+              <div class="card-category">
+                <span class="category-badge">
+                  <i class="fas fa-tag"></i>
+                  Blog Post
+                </span>
+              </div>
+              <div class="card-actions">
+                <button class="card-action-btn" aria-label="Bookmark">
+                  <i class="far fa-bookmark"></i>
+                </button>
+                <button class="card-action-btn" aria-label="Share">
+                  <i class="fas fa-share-alt"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Post content -->
+            <div class="post-content">
+              <!-- Post title -->
+              <h3 class="post-title">
+                <a href="{% url 'post_detail' post.pk %}" class="title-link">
+                  <span class="title-text">{{ post.title }}</span>
+                  <span class="title-underline"></span>
+                </a>
+              </h3>
+              
+              <!-- Post preview with read time -->
+              {% if post.body %}
+              <div class="post-preview">
+                <div class="read-time">
+                  <i class="far fa-clock"></i>
+                  {% with word_count=post.body|wordcount %}
+                      <span class="read-time" data-words="{{ post.body|wordcount }}">
+                          Calculating...
+                      </span>
+                  {% endwith %}
+                </div>
+                <p class="preview-text">{{ post.body|truncatechars:180 }}</p>
+              </div>
+              {% endif %}
+              
+              <!-- Post metadata -->
+              <div class="post-metadata">
+                <div class="author-info">
+                  <div class="author-avatar">
+                    {% if post.author and post.author.username %}
+                      <span class="avatar-text">{{ post.author.username|first|upper }}</span>
+                    {% else %}
+                      <i class="fas fa-user"></i>
+                    {% endif %}
+                  </div>
+                  <div class="author-details">
+                    <span class="author-name">
+                      {{ post.author.username|default:"Anonymous" }}
+                    </span>
+                    <span class="post-date">
+                      <i class="far fa-calendar"></i>
+                      {{ post.created_at|date:"M d, Y" }}
+                    </span>
+                  </div>
+                </div>
+                
+                <!-- Stats -->
+                <div class="post-stats">
+                  <div class="stat">
+                    <i class="far fa-file-word"></i>
+                    <span>{{ post.body|wordcount }} words</span>
+                  </div>
+                  <div class="stat">
+                    <i class="far fa-eye"></i>
+                    <span>{{ forloop.counter|add:"99" }} views</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Tags -->
+              <div class="post-tags">
+                <span class="tag">
+                  <i class="fas fa-hashtag"></i>
+                  Django
+                </span>
+                <span class="tag">
+                  <i class="fas fa-hashtag"></i>
+                  Blog
+                </span>
+                <span class="tag">
+                  <i class="fas fa-hashtag"></i>
+                  Web
+                </span>
+              </div>
+              
+              <!-- Read more link -->
+              <div class="post-link-container">
+                <a href="{% url 'post_detail' post.pk %}" class="post-link">
+                  <span class="link-text">Continue Reading</span>
+                  <span class="link-icon">
+                    <i class="fas fa-arrow-right"></i>
+                  </span>
+                  <span class="link-hover-bg"></span>
+                </a>
+              </div>
+            </div>
+            
+            <!-- Card footer -->
+            <div class="card-footer">
+              <div class="footer-content">
+                <span class="footer-text">
+                  <i class="far fa-comment"></i>
+                  Leave a comment
+                </span>
+                <span class="footer-text">
+                  <i class="far fa-heart"></i>
+                  Like this post
+                </span>
+              </div>
+            </div>
+            
+            <!-- Card hover effect -->
+            <div class="card-hover-effect"></div>
+          </div>
+        {% empty %}
+          <!-- Empty state -->
+          <div class="no-posts-container" data-aos="fade-up">
+            <div class="empty-state">
+              <div class="empty-state-icon animate__animated animate__pulse animate__infinite">
+                <i class="fas fa-pen-nib"></i>
+              </div>
+              <h2 class="empty-state-title">No Posts Yet</h2>
+              <p class="empty-state-description">
+                The blog is waiting for your first story. Share your thoughts and ideas with the community.
+              </p>
+              <div class="empty-state-actions">
+                <a href="{% url 'post_new' %}" class="empty-state-btn btn-primary">
+                  <i class="fas fa-plus"></i>
+                  Create Your First Post
+                </a>
+                <button class="empty-state-btn btn-secondary">
+                  <i class="fas fa-book"></i>
+                  Read Tutorial
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+    <!-- Pagination -->
+    {% if object_list %}
+    <div class="pagination-container" data-aos="fade-up">
+      <nav class="pagination">
+        <a href="#" class="page-link prev" aria-label="Previous">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+        <a href="#" class="page-link active">1</a>
+        <a href="#" class="page-link">2</a>
+        <a href="#" class="page-link">3</a>
+        <span class="page-dots">...</span>
+        <a href="#" class="page-link">8</a>
+        <a href="#" class="page-link next" aria-label="Next">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </nav>
+      <div class="pagination-info">
+        Showing {{ object_list|length }} of {{ object_list|length }} posts
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- CTA Section -->
+  <div class="cta-section" data-aos="fade-up">
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Share Your Story?</h2>
+      <p class="cta-description">
+        Join our community of writers and share your unique perspective with readers from around the world.
+      </p>
+      <div class="cta-actions">
+        <a href="{% url 'post_new' %}" class="cta-btn cta-btn-primary">
+          <i class="fas fa-feather-alt"></i>
+          Start Writing
+        </a>
+        <a href="{% url 'signup' %}" class="cta-btn cta-btn-secondary">
+          <i class="fas fa-users"></i>
+          Join Community
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Background decorative elements -->
+<div class="bg-elements">
+  <div class="bg-circle circle-1"></div>
+  <div class="bg-circle circle-2"></div>
+  <div class="bg-circle circle-3"></div>
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+  <div class="floating-shape shape-3"></div>
+</div>
+
+<!-- Loading animation -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Posts...</div>
+  </div>
+</div>
+
+<!-- Scroll to top button -->
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<!-- AOS library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<!-- Custom JavaScript -->
+<script src="{% static 'js/home.js' %}"></script>
+
+<script>
+  // Initialize AOS
+  AOS.init({
+    duration: 800,
+    once: false,
+    offset: 100,
+    delay: 100,
+    easing: 'ease-in-out-cubic',
+    disable: window.innerWidth < 768,
+    mirror: true
+  });
+  
+  // Typing effect for subtitle
+  document.addEventListener('DOMContentLoaded', function() {
+    const typedText = document.querySelector('.typed-text');
+    const text = typedText.textContent;
+    typedText.textContent = '';
+    
+    let i = 0;
+    const typeWriter = () => {
+      if (i < text.length) {
+        typedText.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 50);
+      }
+    };
+    
+    setTimeout(typeWriter, 1000);
+  });
+</script>
+{% endblock content %}

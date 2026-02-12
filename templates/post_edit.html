@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/edit_post.css">
+<script src="/static/js/edit_post.js" defer></script>
+
+<div class="edit-page-container">
+    <div class="edit-card">
+        <!-- Animated header -->
+        <div class="edit-header">
+            <div class="header-icon">
+                <svg class="edit-icon" viewBox="0 0 24 24">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+            </div>
+            <h2 class="edit-title">Edit Your Post</h2>
+            <p class="edit-subtitle">Make changes to your masterpiece ✨</p>
+        </div>
+
+        <!-- Form container -->
+        <div class="form-container">
+            <form method="post" class="edit-form">
+                {% csrf_token %}
+                
+                <!-- Form fields with custom styling -->
+                <div class="form-fields">
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                            <span class="required-star">*</span>
+                            {% endif %}
+                        </label>
+                        
+                        {% if field.name == 'content' %}
+                        <div class="textarea-container">
+                            {{ field }}
+                            <div class="textarea-footer">
+                                <span class="char-count" data-target="#id_content">0 characters</span>
+                                <div class="format-tools">
+                                    <button type="button" class="format-btn" data-format="bold" title="Bold">
+                                        <strong>B</strong>
+                                    </button>
+                                    <button type="button" class="format-btn" data-format="italic" title="Italic">
+                                        <em>I</em>
+                                    </button>
+                                    <button type="button" class="format-btn" data-format="link" title="Link">
+                                        🔗
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="input-container">
+                            {{ field }}
+                            <div class="input-focus-line"></div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        
+                        {% if field.errors %}
+                        <div class="error-messages">
+                            {% for error in field.errors %}
+                            <span class="error-message">⚠️ {{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Action buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary preview-btn" onclick="previewPost()">
+                        <span class="btn-icon">👁️</span>
+                        Preview
+                    </button>
+                    <div class="action-buttons">
+                        <a href="{% url 'post_detail' post.pk %}" class="btn-cancel">
+                            <span class="btn-icon">←</span>
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn-primary submit-btn">
+                            <span class="btn-icon">💾</span>
+                            Update Post
+                            <span class="btn-loading">⏳</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Preview modal (hidden by default) -->
+        <div class="preview-modal" id="previewModal">
+            <div class="preview-content">
+                <div class="preview-header">
+                    <h3>Post Preview</h3>
+                    <button class="close-preview">&times;</button>
+                </div>
+                <div class="preview-body" id="previewBody">
+                    <!-- Preview content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

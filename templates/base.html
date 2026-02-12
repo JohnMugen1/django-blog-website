@@ -1,0 +1,249 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4facfe">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+    <title>Django Blog</title>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <!-- Logo -->
+            <div class="logo-container">
+                <h1 class="logo">
+                    <span class="logo-gradient">Django</span>
+                    <span class="logo-text">Blog</span>
+                </h1>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{% url 'home' %}" class="nav-link">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'post_new' %}" class="nav-btn">
+                            <i class="fas fa-plus btn-icon"></i>
+                            <span>+ Add Blog</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                <!-- Authentication Section -->
+                <div class="user-auth-section">
+                    {% if user.is_authenticated %}
+                        <div class="user-greeting">
+                            <div class="user-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <span class="user-name">Hello {{ user.username }}!</span>
+                        </div>
+                        
+                        <!-- Logout -->
+                        <form action="{% url 'logout' %}" method="post" class="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="guest-state">
+                            <div class="guest-message">
+                                <div class="warning-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <p>You are not logged in</p>
+                            </div>
+                            <a href="{% url 'login' %}" class="login-btn">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Login</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </nav>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span class="line-1"></span>
+                <span class="line-2"></span>
+                <span class="line-3"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav">
+        <nav class="mobile-nav-content">
+            <div class="mobile-nav-header">
+                <div class="mobile-logo">
+                    <span class="mobile-logo-gradient">Django</span>
+                    <span class="mobile-logo-text">Blog</span>
+                </div>
+                <button class="mobile-close" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Authentication Section -->
+            <div class="mobile-auth-section">
+                {% if user.is_authenticated %}
+                    <div class="mobile-user-greeting">
+                        <div class="mobile-user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="mobile-user-info">
+                            <span class="mobile-user-name">Hello {{ user.username }}!</span>
+                            <span class="mobile-user-status">Logged in</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="mobile-guest-state">
+                        <div class="mobile-guest-icon">
+                            <i class="fas fa-user-lock"></i>
+                        </div>
+                        <div class="mobile-guest-info">
+                            <span class="mobile-guest-title">Welcome Guest</span>
+                            <span class="mobile-guest-message">Please login to create posts</span>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <ul class="mobile-nav-list">
+                <li class="mobile-nav-item">
+                    <a href="{% url 'home' %}" class="mobile-nav-link">
+                        <div class="mobile-nav-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="mobile-nav-text">
+                            <span class="mobile-nav-title">Home</span>
+                            <span class="mobile-nav-desc">Browse all posts</span>
+                        </div>
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="mobile-nav-item">
+                    <a href="{% url 'post_new' %}" class="mobile-nav-link mobile-nav-btn">
+                        <div class="mobile-nav-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="mobile-nav-text">
+                            <span class="mobile-nav-title">Add New Post</span>
+                            <span class="mobile-nav-desc">Create your blog post</span>
+                        </div>
+                        <div class="mobile-nav-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </a>
+                </li>
+                {% endif %}
+                
+                <!-- Mobile Auth Links -->
+                <div class="mobile-auth-links">
+                    {% if user.is_authenticated %}
+                    <li class="mobile-nav-item">
+                        <form action="{% url 'logout' %}" method="post" class="mobile-logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="mobile-logout-btn">
+                                <div class="mobile-nav-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <div class="mobile-nav-text">
+                                    <span class="mobile-nav-title">Logout</span>
+                                    <span class="mobile-nav-desc">Sign out of your account</span>
+                                </div>
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="mobile-nav-item">
+                        <a href="{% url 'login' %}" class="mobile-nav-link">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                            <div class="mobile-nav-text">
+                                <span class="mobile-nav-title">Login</span>
+                                <span class="mobile-nav-desc">Access your account</span>
+                            </div>
+                            <div class="mobile-nav-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
+                    </li>
+                    {% endif %}
+                </div>
+            </ul>
+            
+            <div class="mobile-nav-footer">
+                <p class="mobile-footer-text">
+                    <i class="fas fa-heart"></i> Share your thoughts with the world
+                </p>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="footer-logo-gradient">Django</span>
+                    <span class="footer-logo-text">Blog</span>
+                </div>
+                <p class="footer-tagline">Share your thoughts with the world</p>
+                
+                <div class="footer-links">
+                    <a href="{% url 'home' %}" class="footer-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                    <a href="{% url 'post_new' %}" class="footer-link">
+                        <i class="fas fa-plus"></i>
+                        Add Blog
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">&copy; {% now "Y" %} Django Blog. All rights reserved.</p>
+                <p class="made-with">
+                    Made with <i class="fas fa-heart"></i> by John Mugendi and Django
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login | Modern App{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<script src="{% static 'js/login.js' %}" defer></script>
+
+
+<div class="login-page">
+    <!-- Background Elements -->
+    <div class="bg-gradient"></div>
+    <div class="bg-dots"></div>
+    
+    <!-- Main Container -->
+    <div class="login-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo">
+                <div class="logo-icon">🎯</div>
+                <h1>Modern<span>App</span></h1>
+            </div>
+            <p class="tagline">Simple. Secure. Modern.</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <!-- Card Header -->
+            <div class="card-header">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Sign in to your account</p>
+            </div>
+
+            <!-- Login Form -->
+            <form method="post" class="login-form" id="loginForm">
+                {% csrf_token %}
+                
+                <!-- Form Fields -->
+                <div class="form-grid">
+                    {% for field in form %}
+                    <div class="form-field">
+                        <div class="field-label">
+                            <label for="{{ field.id_for_label }}">
+                                <span class="label-text">{{ field.label }}</span>
+                                {% if field.field.required %}
+                                <span class="required">*</span>
+                                {% endif %}
+                            </label>
+                        </div>
+                        
+                        <div class="input-container">
+                            <div class="input-icon">
+                                {% if field.name == 'username' or field.name == 'email' %}
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                                {% elif field.name == 'password' %}
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                                </svg>
+                                {% else %}
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+                                </svg>
+                                {% endif %}
+                            </div>
+                            
+                            {{ field }}
+                            
+                            {% if field.name == 'password' %}
+                            <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                <svg class="eye-icon" viewBox="0 0 24 24">
+                                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                </svg>
+                            </button>
+                            {% endif %}
+                        </div>
+                        
+                        {% if field.errors %}
+                        <div class="field-error">
+                            <svg class="error-icon" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                            <span>{{ field.errors.0 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                        <div class="field-help">
+                            <span>{{ field.help_text }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="form-options">
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="remember" id="remember">
+                        <span class="custom-checkbox"></span>
+                        <span class="option-text">Keep me signed in</span>
+                    </label>
+                    
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-button" id="submitBtn">
+                    <span class="button-text">Sign In</span>
+                    <div class="button-loader">
+                        <div class="loader-spinner"></div>
+                    </div>
+                </button>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <!-- Social Buttons -->
+                <div class="social-buttons">
+                    <button type="button" class="social-button google">
+                        <svg class="social-icon" viewBox="0 0 24 24">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span>Google</span>
+                    </button>
+                    
+                    <button type="button" class="social-button github">
+                        <svg class="social-icon" viewBox="0 0 24 24">
+                            <path d="M12 1.27a11 11 0 00-3.48 21.46c.55.09.73-.28.73-.55v-1.84c-3.03.64-3.67-1.46-3.67-1.46-.55-1.29-1.28-1.65-1.28-1.65-.92-.65.1-.65.1-.65 1.1 0 1.73 1.1 1.73 1.1.92 1.65 2.57 1.2 3.21.92a2 2 0 01.64-1.47c-2.47-.27-5.04-1.19-5.04-5.5 0-1.1.46-2.1 1.2-2.84a3.76 3.76 0 010-2.93s.91-.28 3.11 1.1c1.8-.49 3.7-.49 5.5 0 2.1-1.38 3.02-1.1 3.02-1.1a3.76 3.76 0 010 2.93c.83.74 1.2 1.74 1.2 2.84 0 4.21-2.57 5.13-5.04 5.4.45.37.82.92.82 2.02v3.03c0 .27.1.64.73.55A11 11 0 0012 1.27"/>
+                        </svg>
+                        <span>GitHub</span>
+                    </button>
+                </div>
+
+                <!-- Signup Link -->
+                <div class="signup-link">
+                    <p>Don't have an account? <a href="{% url 'signup' %}">Create one now</a></p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <p>&copy; 2026 ModernApp. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/post_new.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+{% endblock %}
+
+{% block title %}Create Post - Django Blog{% endblock %}
+
+{% block content %}
+<div class="form-page-container">
+  <!-- Animated Background Elements -->
+  <div class="form-background">
+    <div class="floating-element el-1"></div>
+    <div class="floating-element el-2"></div>
+    <div class="floating-element el-3"></div>
+    <div class="floating-element el-4"></div>
+    <div class="floating-element el-5"></div>
+    
+    <!-- Gradient Orbs -->
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+  
+  <!-- Decorative Corner Elements -->
+  <div class="corner-element corner-tl"></div>
+  <div class="corner-element corner-tr"></div>
+  <div class="corner-element corner-bl"></div>
+  <div class="corner-element corner-br"></div>
+
+  <div class="form-container" data-aos="zoom-in" data-aos-duration="800">
+    <!-- Form Decoration -->
+    <div class="form-decoration">
+      <div class="decoration-line line-top"></div>
+      <div class="decoration-line line-bottom"></div>
+      <div class="decoration-dot dot-left"></div>
+      <div class="decoration-dot dot-right"></div>
+    </div>
+    
+    <!-- Form Header with Animation -->
+    <div class="form-header" data-aos="fade-down" data-aos-delay="200">
+      <div class="header-icon animate__animated animate__pulse animate__infinite">
+        <i class="fas fa-feather-alt"></i>
+      </div>
+      <h2 class="form-title">
+        <span class="title-word title-word-1">Create</span>
+        <span class="title-word title-word-2">Your</span>
+        <span class="title-word title-word-3">Story</span>
+      </h2>
+      
+      <div class="form-subtitle-container">
+        <p class="form-subtitle">
+          <span class="typed-text">Share your thoughts with the community</span>
+          <span class="typing-cursor">|</span>
+        </p>
+      </div>
+      
+      <!-- Progress Steps -->
+      <div class="progress-steps" data-aos="fade-up" data-aos-delay="300">
+        <div class="step active">
+          <span class="step-number">1</span>
+          <span class="step-label">Content</span>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <span class="step-label">Details</span>
+        </div>
+        <div class="step">
+          <span class="step-number">3</span>
+          <span class="step-label">Publish</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Form -->
+    <form action="" method="post" class="blog-form" id="postForm">
+      {% csrf_token %}
+      
+      <div class="form-content" data-aos="fade-up" data-aos-delay="400">
+        <!-- Form Fields Container with Animation -->
+        <div class="form-fields-container">
+          {% for field in form %}
+          <div class="form-field-group" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'4' }}00">
+            <!-- Field Label with Icon -->
+            <div class="field-label-container">
+              <div class="label-icon">
+                {% if field.name == 'title' %}
+                  <i class="fas fa-heading"></i>
+                {% elif field.name == 'body' %}
+                  <i class="fas fa-align-left"></i>
+                {% elif field.name == 'author' %}
+                  <i class="fas fa-user-edit"></i>
+                {% else %}
+                  <i class="fas fa-pen"></i>
+                {% endif %}
+              </div>
+              <label for="{{ field.id_for_label }}" class="field-label">
+                {{ field.label }}
+                {% if field.field.required %}
+                  <span class="required-star">*</span>
+                {% endif %}
+              </label>
+            </div>
+            
+            <!-- Field Input -->
+            <div class="field-input-container">
+              {% if field.field.widget.input_type == 'textarea' %}
+                <div class="textarea-wrapper">
+                  {{ field }}
+                  <div class="textarea-footer">
+                    <div class="word-count">
+                      <i class="fas fa-font"></i>
+                      <span class="count-text">Words: <span id="wordCount">0</span></span>
+                    </div>
+                    <div class="char-count">
+                      <i class="fas fa-ruler"></i>
+                      <span class="count-text">Chars: <span id="charCount">0</span></span>
+                    </div>
+                  </div>
+                </div>
+              {% else %}
+                <div class="input-wrapper">
+                  {{ field }}
+                  <div class="input-decoration"></div>
+                </div>
+              {% endif %}
+              
+              <!-- Field Help Text -->
+              {% if field.help_text %}
+              <div class="field-help">
+                <i class="fas fa-info-circle"></i>
+                {{ field.help_text }}
+              </div>
+              {% endif %}
+              
+              <!-- Field Errors -->
+              {% if field.errors %}
+              <div class="field-errors animate__animated animate__shakeX">
+                {% for error in field.errors %}
+                <div class="error-message">
+                  <i class="fas fa-exclamation-circle"></i>
+                  {{ error }}
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+            
+            <!-- Character Counter (for text inputs) -->
+            {% if field.field.widget.input_type == 'text' %}
+            <div class="char-counter" style="display: none;">
+              <span class="counter-text"></span>
+              <div class="counter-bar">
+                <div class="counter-fill"></div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Form Tips Section -->
+        <div class="form-tips" data-aos="fade-up" data-aos-delay="600">
+          <div class="tips-header">
+            <i class="fas fa-lightbulb"></i>
+            <h3 class="tips-title">Writing Tips</h3>
+          </div>
+          <div class="tips-content">
+            <div class="tip-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Keep your title clear and engaging</span>
+            </div>
+            <div class="tip-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Use paragraphs to organize your thoughts</span>
+            </div>
+            <div class="tip-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Proofread before publishing</span>
+            </div>
+            <div class="tip-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Add relevant images if possible</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Form Actions -->
+      <div class="form-actions" data-aos="fade-up" data-aos-delay="700">
+        <div class="action-buttons">
+          <!-- Preview Button -->
+          <button type="button" class="action-btn preview-btn" id="previewBtn">
+            <i class="fas fa-eye"></i>
+            <span>Preview</span>
+          </button>
+          
+          <!-- Submit Button -->
+          <div class="submit-container">
+            <input type="submit" value="Publish Post" class="submit-btn">
+            <div class="submit-overlay">
+              <i class="fas fa-paper-plane"></i>
+              <span class="submit-text">Publishing...</span>
+            </div>
+          </div>
+          
+          <!-- Cancel Button -->
+          <a href="{% url 'home' %}" class="action-btn cancel-btn">
+            <i class="fas fa-times"></i>
+            <span>Cancel</span>
+          </a>
+        </div>
+        
+        <!-- Form Footer -->
+        <div class="form-footer">
+          <div class="form-status">
+            <i class="fas fa-save"></i>
+            <span class="status-text">Draft autosaved</span>
+            <span class="status-time">Just now</span>
+          </div>
+          <div class="form-info">
+            <i class="fas fa-shield-alt"></i>
+            <span>Your data is secure</span>
+          </div>
+        </div>
+      </div>
+    </form>
+    
+    <!-- Live Preview Modal -->
+    <div class="preview-modal" id="previewModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Post Preview</h3>
+          <button class="modal-close" id="closePreview">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="preview-content">
+            <h4 id="previewTitle">Your Title Here</h4>
+            <div class="preview-meta">
+              <span><i class="far fa-user"></i> You</span>
+              <span><i class="far fa-clock"></i> Just now</span>
+              <span><i class="far fa-file-word"></i> <span id="previewWordCount">0</span> words</span>
+            </div>
+            <div class="preview-body" id="previewBody">
+              <p>Your content will appear here...</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn secondary-btn" id="editPreview">
+            <i class="fas fa-edit"></i>
+            Continue Editing
+          </button>
+          <button class="modal-btn primary-btn" id="publishPreview">
+            <i class="fas fa-paper-plane"></i>
+            Publish Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Floating Action Button -->
+  <button class="floating-action-btn" id="helpBtn" aria-label="Get Help">
+    <i class="fas fa-question"></i>
+  </button>
+  
+  <!-- Help Modal -->
+  <div class="help-modal" id="helpModal">
+    <div class="help-content">
+      <h3><i class="fas fa-life-ring"></i> Need Help?</h3>
+      <p>Our guide will help you create amazing blog posts.</p>
+      <a href="#" class="help-link">
+        <i class="fas fa-book"></i>
+        Read Writing Guide
+      </a>
+      <a href="#" class="help-link">
+        <i class="fas fa-video"></i>
+        Watch Tutorial
+      </a>
+      <button class="help-close" id="closeHelp">
+        <i class="fas fa-times"></i>
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- AOS Library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<!-- Custom JavaScript -->
+<script src="{% static 'js/post_new.js' %}"></script>
+
+<script>
+  // Initialize AOS
+  AOS.init({
+    duration: 800,
+    once: false,
+    offset: 100,
+    delay: 100,
+    easing: 'ease-in-out-cubic'
+  });
+  
+  // Typing effect for subtitle
+  document.addEventListener('DOMContentLoaded', function() {
+    const typedText = document.querySelector('.typed-text');
+    if (typedText) {
+      const text = typedText.textContent;
+      typedText.textContent = '';
+      
+      let i = 0;
+      const typeWriter = () => {
+        if (i < text.length) {
+          typedText.textContent += text.charAt(i);
+          i++;
+          setTimeout(typeWriter, 50);
+        }
+      };
+      
+      setTimeout(typeWriter, 1000);
+    }
+  });
+</script>
+{% endblock content %}

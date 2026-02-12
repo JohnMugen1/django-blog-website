@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/delete_post.css">
+<script src="/static/js/delete_post.js" defer></script>
+
+<div class="delete-page-container">
+    <!-- Warning background animation -->
+    <div class="warning-bg">
+        <div class="warning-particle"></div>
+        <div class="warning-particle"></div>
+        <div class="warning-particle"></div>
+        <div class="warning-particle"></div>
+    </div>
+    
+    <div class="delete-card">
+        <!-- Header with warning icon -->
+        <div class="delete-header">
+            <div class="warning-icon-container">
+                <svg class="warning-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                <div class="pulse-ring"></div>
+                <div class="pulse-ring"></div>
+            </div>
+            <h1 class="delete-title">Confirm Deletion</h1>
+            <p class="delete-subtitle">This action cannot be undone</p>
+        </div>
+
+        <!-- Content area -->
+        <div class="delete-content">
+            <div class="post-preview">
+                <div class="post-header">
+                    <h3 class="post-title">{{ post.title }}</h3>
+                    {% if post.created_at %}
+                    <span class="post-date">{{ post.created_at|date:"F j, Y" }}</span>
+                    {% endif %}
+                </div>
+                
+                {% if post.content %}
+                <div class="post-excerpt">
+                    {{ post.content }}
+                </div>
+                {% endif %}
+                
+                <div class="post-stats">
+                    {% if post.author %}
+                    <div class="stat">
+                        <span class="stat-icon">👤</span>
+                        <span class="stat-text">Author: {{ post.author }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="stat">
+                        <span class="stat-icon">📄</span>
+                        <span class="stat-text" id="wordCount">Content: Loading words...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warning message -->
+            <div class="warning-message">
+                <div class="warning-card">
+                    <div class="warning-header">
+                        <span class="warning-emoji">⚠️</span>
+                        <span class="warning-text">Warning</span>
+                    </div>
+                    <p class="warning-details">
+                        You are about to permanently delete this post. This action will:
+                    </p>
+                    <ul class="warning-list">
+                        <li>Remove the post from the database</li>
+                        <li>Delete all associated comments</li>
+                        <li>Cannot be recovered</li>
+                        <li>Affect any shared links</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <form method="post" class="delete-form" id="deleteForm">
+                {% csrf_token %}
+                
+                <!-- Hidden submit button for form submission -->
+                <button type="submit" id="hiddenSubmit" style="display: none;"></button>
+                
+                <div class="button-group">
+                    <a href="{% url 'post_detail' post.id %}" class="btn-cancel">
+                        <span class="btn-icon">←</span>
+                        <span class="btn-text">Go Back</span>
+                        <span class="btn-hover-effect"></span>
+                    </a>
+                    
+                    <button type="button" class="btn-secondary" id="thinkAgainBtn">
+                        <span class="btn-icon">🤔</span>
+                        <span class="btn-text">Think Again</span>
+                        <span class="btn-hover-effect"></span>
+                    </button>
+                    
+                    <!-- MAIN DELETE BUTTON: type="button" prevents immediate form submission -->
+                    <button type="button" class="btn-delete" id="deleteBtn">
+                        <span class="btn-icon">🗑️</span>
+                        <span class="btn-text">Delete Forever</span>
+                        <span class="btn-loading">
+                            <span class="loading-dot"></span>
+                            <span class="loading-dot"></span>
+                            <span class="loading-dot"></span>
+                        </span>
+                        <span class="btn-hover-effect"></span>
+                    </button>
+                </div>
+                
+                <!-- Confirmation step -->
+                <div class="confirmation-step" id="confirmationStep" style="display: none;">
+                    <div class="confirmation-card">
+                        <p class="confirmation-text">
+                            <strong>Last chance!</strong> Type "DELETE" to confirm:
+                        </p>
+                        <div class="confirmation-input">
+                            <input type="text" 
+                                   id="confirmInput" 
+                                   placeholder="Type DELETE here..."
+                                   maxlength="6">
+                            <span class="input-icon">✍️</span>
+                        </div>
+                        <div class="confirmation-buttons">
+                            <button type="button" class="btn-confirm-cancel" id="cancelConfirm">
+                                Never mind
+                            </button>
+                            <!-- FINAL DELETE BUTTON: type="button" to control submission via JavaScript -->
+                            <button type="button" class="btn-confirm-delete" disabled id="finalDeleteBtn">
+                                Yes, Delete Permanently
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success modal -->
+    <div class="success-modal" id="successModal" style="display: none;">
+        <div class="success-content">
+            <div class="success-icon">✓</div>
+            <h3>Post Deleted</h3>
+            <p>The post has been successfully deleted</p>
+            <a href="{% url 'home' %}" class="btn-success">
+                Back to Posts
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

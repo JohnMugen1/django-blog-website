@@ -16,13 +16,7 @@ A modern, feature-rich blog platform built with Django. Users can create account
 
 ## 📸 Screenshots
 
-<img width="374" height="449" alt="print-post-mobile-version" src="https://github.com/user-attachments/assets/bb846726-5e30-4d84-b80b-0f00eac57b85" />
 
-<img width="959" height="449" alt="edit-post-web-version" src="https://github.com/user-attachments/assets/31b2940f-84ac-4377-a478-61ad1ac533ec" />
-
-<img width="365" height="446" alt="edit-post-mobile-version" src="https://github.com/user-attachments/assets/7685b962-f06a-4a25-866c-5311babe98ce" />
-
-<img width="369" height="453" alt="add-pos-mobile-version" src="https://github.com/user-attachments/assets/3cd3b0ea-8ea7-4c34-a2b4-cf2b36306f3e" />
 <img width="959" height="448" alt="add-post-web-version" src="https://github.com/user-attachments/assets/55bfd2fd-be41-4042-9df3-d60a7ff2da24" />
 <img width="869" height="445" alt="single-blog-post" src="https://github.com/user-attachments/assets/ebe0b481-1903-4b7e-9e79-e272bf111a3a" />
 <img width="359" height="444" alt="single-blog-post-mobile-version" src="https://github.com/user-attachments/assets/80e5ca94-4f04-4f83-9c10-a5773cf0c23c" />
@@ -31,6 +25,13 @@ A modern, feature-rich blog platform built with Django. Users can create account
 <img width="960" height="450" alt="delete-post-web-version" src="https://github.com/user-attachments/assets/f5c3be24-a3c2-49f5-b3c4-a2f3ee111c51" />
 <img width<img width="369" height="449" alt="delete-post-mobile-version" src="https://github.com/user-attachments/assets/a6c8d48d-d9d5-4524-bb81-07c6412badd1" />
 <img width="365" height="446" alt="edit-post-mobile-version" src="https://github.com/user-attachments/assets/6006c3e6-96c0-4ead-8ef6-a5b2ee6020ba" />
+<img width="374" height="449" alt="print-post-mobile-version" src="https://github.com/user-attachments/assets/bb846726-5e30-4d84-b80b-0f00eac57b85" />
+
+<img width="959" height="449" alt="edit-post-web-version" src="https://github.com/user-attachments/assets/31b2940f-84ac-4377-a478-61ad1ac533ec" />
+
+<img width="365" height="446" alt="edit-post-mobile-version" src="https://github.com/user-attachments/assets/7685b962-f06a-4a25-866c-5311babe98ce" />
+
+<img width="369" height="453" alt="add-pos-mobile-version" src="https://github.com/user-attachments/assets/3cd3b0ea-8ea7-4c34-a2b4-cf2b36306f3e" />
 
 ## 🚀 Key Features
 - ✅ User authentication (signup/login/logout)

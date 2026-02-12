@@ -12,7 +12,7 @@
 A modern, feature-rich blog platform built with Django. Users can create accounts, write posts, comment, and interact with content.
 
 ## ✨ Live Demo
-[Link to your deployed site - we'll add this later]
+## 🌐 [VIEW LIVE DEMO](https://blogposts25.pythonanywhere.com)
 
 ## 📸 Screenshots
 

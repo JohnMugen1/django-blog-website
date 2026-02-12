@@ -44,4 +44,27 @@ A modern, feature-rich blog platform built with Django. Users can create account
 1. **Clone the repo**
    ```bash
    git clone https://github.com/[JohnMugen1]/[django-blog-website].git
-   cd [repo-name]
+## 📁 Project Structure
+[blog]/
+├── blog/              # Main blog application
+├── accounts/            # User authentication app
+├── templates/        # HTML templates
+├── static/          # CSS, JavaScript
+├── blog_project/     # Project settings
+├── db.sqlite3/         # Development Database File
+└── manage.py        # Django management script
+   cd [blog]
+
+
+## 🤝 Connect With Me
+GitHub: https://github.com/JohnMugen1
+
+LinkedIn: www.linkedin.com/in/john-mugendi-820018378
+
+Portfolio: https://bold.pro/my/john-mugendi-251203130417
+
+Email: johnmugendik776@gmail.com
+
+
+## 📄 License
+MIT License - feel free to use this project for learning!

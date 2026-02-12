@@ -1,3 +1,12 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/Django-4.x-green" alt="Django Version">
+  <img src="https://img.shields.io/badge/Python-3.x-blue" alt="Python Version">
+  <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome">
+</p>
+
+
+
 # Django Blog Website
 
 A modern, feature-rich blog platform built with Django. Users can create accounts, write posts, comment, and interact with content.

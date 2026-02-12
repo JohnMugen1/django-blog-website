@@ -8,6 +8,11 @@ A modern, feature-rich blog platform built with Django. Users can create account
 
 ## 📸 Screenshots
 
+<img width="374" height="449" alt="print-post-mobile-version" src="https://github.com/user-attachments/assets/bb846726-5e30-4d84-b80b-0f00eac57b85" />
+
+<img width="959" height="449" alt="edit-post-web-version" src="https://github.com/user-attachments/assets/31b2940f-84ac-4377-a478-61ad1ac533ec" />
+
+<img width="365" height="446" alt="edit-post-mobile-version" src="https://github.com/user-attachments/assets/7685b962-f06a-4a25-866c-5311babe98ce" />
 
 <img width="369" height="453" alt="add-pos-mobile-version" src="https://github.com/user-attachments/assets/3cd3b0ea-8ea7-4c34-a2b4-cf2b36306f3e" />
 <img width="959" height="448" alt="add-post-web-version" src="https://github.com/user-attachments/assets/55bfd2fd-be41-4042-9df3-d60a7ff2da24" />
@@ -39,5 +44,5 @@ A modern, feature-rich blog platform built with Django. Users can create account
 
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/[yourusername]/[repo-name].git
+   git clone https://github.com/[JohnMugen1]/[django-blog-website].git
    cd [repo-name]

@@ -1,5 +1,4 @@
-# Blog Name
-Django Blog Website
+# Django Blog Website
 
 A modern, feature-rich blog platform built with Django. Users can create accounts, write posts, comment, and interact with content.
 

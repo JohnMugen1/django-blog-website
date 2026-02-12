@@ -16,7 +16,7 @@ A modern, feature-rich blog platform built with Django. Users can create account
 
 ## 📸 Screenshots
 
-<img wi<img width="374" height="444" alt="hom-mobile-scrshot" src="https://github.com/user-attachments/assets/ebd897be-1254-4844-bbf2-e588accd0719" />
+<img width="374" height="444" alt="hom-mobile-scrshot" src="https://github.com/user-attachments/assets/ebd897be-1254-4844-bbf2-e588accd0719" />
 <img width="959" height="448" alt="add-post-web-version" src="https://github.com/user-attachments/assets/55bfd2fd-be41-4042-9df3-d60a7ff2da24" />
 <img width="869" height="445" alt="single-blog-post" src="https://github.com/user-attachments/assets/ebe0b481-1903-4b7e-9e79-e272bf111a3a" />
 <img width="359" height="444" alt="single-blog-post-mobile-version" src="https://github.com/user-attachments/assets/80e5ca94-4f04-4f83-9c10-a5773cf0c23c" />
